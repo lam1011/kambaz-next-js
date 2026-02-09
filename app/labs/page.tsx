@@ -20,7 +20,7 @@ export default function labs() {
            Lab 3: JavaScript Fundamentals </Link>
        </li>
        <li>
-         <Link href="https://github.com/https://github.com/lam1011/kambaz-next-js/tree/a2/kambaz-next-js" id="wd-github">
+         <Link href="https://github.com/lam1011/kambaz-next-js/tree/a2" id="wd-github">
            Github repo link </Link>
        </li>
      </ul>
