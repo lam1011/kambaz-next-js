@@ -1,103 +1,137 @@
 import Link from "next/link";
-import Image from "next/image";
+import { Card, CardImg, CardBody, CardTitle, CardText, Button, Row, Col } from "react-bootstrap";
+
 export default function Dashboard() {
-    return (
-        <div id="wd-dashboard">
-            <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
-            <h2 id="wd-dashboard-published">Published Courses (12)</h2> <hr />
-            <div id="wd-dashboard-courses">
-                <div className="wd-dashboard-course">
-                    <Link href="/courses/1234" className="wd-dashboard-course-link">
-                        <Image src="/images/reactjs.jpg" width={200} height={150} alt="reactjs" />
-                        <div>
-                            <h5> CS1234 React JS </h5>
-                            <p className="wd-dashboard-course-title">
-                                Full Stack software developer
-                            </p>
-                            <button> Go </button>
-                        </div>
-                    </Link>
-                </div>
+  return (
+    <div id="wd-dashboard">
+      <h1 id="wd-dashboard-title">Dashboard</h1>
+      <hr />
+      <h2 id="wd-dashboard-published">Published Courses (7)</h2>
+      <hr />
+      <div id="wd-dashboard-courses">
+        <Row xs={1} md={5} className="g-4">
+          
+          <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+            <Card>
+              <Link href="/courses/1234/home" className="wd-dashboard-course-link text-decoration-none text-dark">
+                <CardImg variant="top" src="/images/reactjs.jpg" width="100%" height={160}/>
+                <CardBody>
+                  <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                    CS1234 React JS
+                  </CardTitle>
+                  <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                    Full Stack software developer
+                  </CardText>
+                  <Button variant="primary">Go</Button>
+                </CardBody>
+              </Link>
+            </Card>
+          </Col>
 
-                <div className="wd-dashboard-course">
-                    <Link href="/courses/1000" className="wd-dashboard-course-link">
-                        <Image src="/images/goofy.jpg" width={200} height={150} alt="reactjs" />
-                        <div>
-                            <h5> CS1000 Goofy AHH </h5>
-                            <p className="wd-dashboard-course-title">
-                                How to be a Goofy AHH Engineer
-                            </p>
-                            <button> Go </button>
-                        </div>
-                    </Link>
-                </div>
+          <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+            <Card>
+              <Link href="/courses/1000/home" className="wd-dashboard-course-link text-decoration-none text-dark">
+                <CardImg variant="top" src="/images/goofy.jpg" width="100%" height={160}/>
+                <CardBody>
+                  <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                    CS1000 Goofy AHH
+                  </CardTitle>
+                  <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                    How to be a Goofy AHH Engineer
+                  </CardText>
+                  <Button variant="primary">Go</Button>
+                </CardBody>
+              </Link>
+            </Card>
+          </Col>
 
-                <div className="wd-dashboard-course">
-                    <Link href="/courses/1001" className="wd-dashboard-course-link">
-                        <Image src="/images/drake.jpg" width={200} height={150} alt="reactjs" />
-                        <div>
-                            <h5> CS1001 Advanced Goofy AHH </h5>
-                            <p className="wd-dashboard-course-title">
-                                How to be an Advanced Goofy AHH Engineer
-                            </p>
-                            <button> Go </button>
-                        </div>
-                    </Link>
-                </div>
+          <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+            <Card>
+              <Link href="/courses/1001/home" className="wd-dashboard-course-link text-decoration-none text-dark">
+                <CardImg variant="top" src="/images/drake.jpg" width="100%" height={160}/>
+                <CardBody>
+                  <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                    CS1001 Advanced Goofy AHH
+                  </CardTitle>
+                  <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                    How to be an Advanced Goofy AHH Engineer
+                  </CardText>
+                  <Button variant="primary">Go</Button>
+                </CardBody>
+              </Link>
+            </Card>
+          </Col>
 
-                <div className="wd-dashboard-course">
-                    <Link href="/courses/1167" className="wd-dashboard-course-link">
-                        <Image src="/images/67.jpg" width={200} height={150} alt="reactjs" />
-                        <div>
-                            <h5> MATH1167 Six-Seven </h5>
-                            <p className="wd-dashboard-course-title">
-                                Intro to Mathmatical Six-Seven Theory
-                            </p>
-                            <button> Go </button>
-                        </div>
-                    </Link>
-                </div>
+          <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+            <Card>
+              <Link href="/courses/1167/home" className="wd-dashboard-course-link text-decoration-none text-dark">
+                <CardImg variant="top" src="/images/67.jpg" width="100%" height={160}/>
+                <CardBody>
+                  <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                    MATH1167 Six-Seven
+                  </CardTitle>
+                  <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                    Intro to Mathmatical Six-Seven Theory
+                  </CardText>
+                  <Button variant="primary">Go</Button>
+                </CardBody>
+              </Link>
+            </Card>
+          </Col>
 
-                <div className="wd-dashboard-course">
-                    <Link href="/courses/2110" className="wd-dashboard-course-link">
-                        <Image src="/images/ambatakum.jpg" width={200} height={150} alt="reactjs" />
-                        <div>
-                            <h5> PHIL2110 Ambatakum </h5>
-                            <p className="wd-dashboard-course-title">
-                                Societal Norms Within the Ambatakum Religion
-                            </p>
-                            <button> Go </button>
-                        </div>
-                    </Link>
-                </div>
+          <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+            <Card>
+              <Link href="/courses/2110/home" className="wd-dashboard-course-link text-decoration-none text-dark">
+                <CardImg variant="top" src="/images/ambatakum.jpg" width="100%" height={160}/>
+                <CardBody>
+                  <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                    PHIL2110 Ambatakum
+                  </CardTitle>
+                  <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                    Societal Norms Within the Ambatakum Religion
+                  </CardText>
+                  <Button variant="primary">Go</Button>
+                </CardBody>
+              </Link>
+            </Card>
+          </Col>
 
-                <div className="wd-dashboard-course">
-                    <Link href="/courses/2005" className="wd-dashboard-course-link">
-                        <Image src="/images/goated.jpg" width={200} height={150} alt="reactjs" />
-                        <div>
-                            <h5> HIST2005 Birth of the GOAT </h5>
-                            <p className="wd-dashboard-course-title">
-                                Intro to the Birth of the GOAT (Greatest of All Time)
-                            </p>
-                            <button> Go </button>
-                        </div>
-                    </Link>
-                </div>
+          <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+            <Card>
+              <Link href="/courses/2005/home" className="wd-dashboard-course-link text-decoration-none text-dark">
+                <CardImg variant="top" src="/images/goated.jpg" width="100%" height={160}/>
+                <CardBody>
+                  <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                    HIST2005 Birth of the GOAT
+                  </CardTitle>
+                  <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                    Intro to the Birth of the GOAT (Greatest of All Time)
+                  </CardText>
+                  <Button variant="primary">Go</Button>
+                </CardBody>
+              </Link>
+            </Card>
+          </Col>
 
-                <div className="wd-dashboard-course">
-                    <Link href="/courses/6969" className="wd-dashboard-course-link">
-                        <Image src="/images/gooner.jpg" width={200} height={150} alt="reactjs" />
-                        <div>
-                            <h5> THTR6969 Advanced Goon Acting </h5>
-                            <p className="wd-dashboard-course-title">
-                                Advanced Acting on Gooning
-                            </p>
-                            <button> Go </button>
-                        </div>
-                    </Link>
-                </div>
-            </div>
-        </div>
-    );
+          <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+            <Card>
+              <Link href="/courses/6969/home" className="wd-dashboard-course-link text-decoration-none text-dark">
+                <CardImg variant="top" src="/images/gooner.jpg" width="100%" height={160}/>
+                <CardBody>
+                  <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                    THTR6969 Advanced Goon Acting
+                  </CardTitle>
+                  <CardText className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                    Advanced Acting on Gooning
+                  </CardText>
+                  <Button variant="primary">Go</Button>
+                </CardBody>
+              </Link>
+            </Card>
+          </Col>
+
+        </Row>
+      </div>
+    </div>
+  );
 }
-
