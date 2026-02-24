@@ -1,29 +1,29 @@
-import { Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
+"use client";
+import { Button, FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
 import { BsGripVertical, BsPlus } from "react-icons/bs";
 import { IoEllipsisVertical, IoSearchSharp } from "react-icons/io5";
 import { FaCaretDown } from "react-icons/fa";
 import { MdAssignment } from "react-icons/md";
 import Link from "next/link";
 import InputGroup from "react-bootstrap/InputGroup";
-import InputGroupText from 'react-bootstrap/InputGroupText';
+import InputGroupText from "react-bootstrap/InputGroupText";
+import { useParams } from "next/navigation";
+import * as db from "@/app/(kambaz)/database";
 
 export default function Assignments() {
+  const { cid } = useParams();
+  const assignments = (db.assignments as any[]).filter((a) => a.course === cid);
+
   return (
     <div id="wd-assignments">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <InputGroup style={{ width: "300px" }}>
-          <InputGroupText>
-            <IoSearchSharp />
-          </InputGroupText>
+          <InputGroupText><IoSearchSharp /></InputGroupText>
           <FormControl placeholder="Search for Assignment" />
         </InputGroup>
         <div>
-          <Button variant="secondary" className="me-2">
-            <BsPlus className="fs-4" /> Group
-          </Button>
-          <Button variant="danger">
-            <BsPlus className="fs-4" /> Assignment
-          </Button>
+          <Button variant="secondary" className="me-2"><BsPlus className="fs-4" /> Group</Button>
+          <Button variant="danger"><BsPlus className="fs-4" /> Assignment</Button>
         </div>
       </div>
 
@@ -39,50 +39,20 @@ export default function Assignments() {
           </span>
         </ListGroupItem>
 
-        <ListGroupItem className="wd-assignment-list-item p-3 ps-1">
-          <BsGripVertical className="me-2 fs-3" />
-          <MdAssignment className="me-2 fs-4 text-success" /> 
-          <Link href="/courses/1234/assignments/123" className="text-decoration-none text-dark">
-            <strong>A1</strong>
-            <br />
-            <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 6 at 12:00am |
-            <br />
-            <strong>Due</strong> May 13 at 11:59pm | 100 pts
-          </Link>
-          <span className="float-end">
-            <IoEllipsisVertical className="fs-4" />
-          </span>
-        </ListGroupItem>
-
-        <ListGroupItem className="wd-assignment-list-item p-3 ps-1">
-          <BsGripVertical className="me-2 fs-3" />
-          <MdAssignment className="me-2 fs-4 text-success" /> 
-          <Link href="/courses/1234/assignments/124" className="text-decoration-none text-dark">
-            <strong>A2</strong>
-            <br />
-            <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 13 at 12:00am |
-            <br />
-            <strong>Due</strong> May 20 at 11:59pm | 100 pts
-          </Link>
-          <span className="float-end">
-            <IoEllipsisVertical className="fs-4" />
-          </span>
-        </ListGroupItem>
-
-        <ListGroupItem className="wd-assignment-list-item p-3 ps-1">
-          <BsGripVertical className="me-2 fs-3" />
-          <MdAssignment className="me-2 fs-4 text-success" /> 
-          <Link href="/courses/1234/assignments/125" className="text-decoration-none text-dark">
-            <strong>A3</strong>
-            <br />
-            <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 20 at 12:00am |
-            <br />
-            <strong>Due</strong> May 27 at 11:59pm | 100 pts
-          </Link>
-          <span className="float-end">
-            <IoEllipsisVertical className="fs-4" />
-          </span>
-        </ListGroupItem>
+        {assignments.map((assignment) => (
+          <ListGroupItem key={assignment._id} className="wd-assignment-list-item p-3 ps-1">
+            <BsGripVertical className="me-2 fs-3" />
+            <MdAssignment className="me-2 fs-4 text-success" />
+            <Link href={`/courses/${cid}/assignments/${assignment._id}`} className="text-decoration-none text-dark">
+              <strong>{assignment.title}</strong><br />
+              <span className="text-danger">Multiple Modules</span>
+              {assignment.availableFrom && <> | <strong>Not available until</strong> {assignment.availableFrom}</>}
+              {assignment.dueDate && <><br /><strong>Due</strong> {assignment.dueDate}</>}
+              {assignment.points && <> | {assignment.points} pts</>}
+            </Link>
+            <span className="float-end"><IoEllipsisVertical className="fs-4" /></span>
+          </ListGroupItem>
+        ))}
       </ListGroup>
     </div>
   );
