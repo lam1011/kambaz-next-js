@@ -23,6 +23,10 @@ export default function labs() {
          <Link href="https://github.com/lam1011/kambaz-next-js/tree/a2" id="wd-github">
            Github repo link </Link>
        </li>
+       <li> 
+        <Link href="/labs/lab4" id="wd-lab4-link">
+          Lab 4: Maintaining State in React Applications </Link>
+       </li>
      </ul>
    </div>
 );}
