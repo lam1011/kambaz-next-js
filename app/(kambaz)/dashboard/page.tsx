@@ -10,6 +10,7 @@ export default function Dashboard() {
   const { courses } = useSelector((state: any) => state.coursesReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
+  const isFaculty = currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
 
   const [course, setCourse] = useState<any>({
     name: "New Course",
@@ -18,11 +19,21 @@ export default function Dashboard() {
     endDate: "2023-12-15",
     description: "New Description",
   });
+  const [enrolledCourseIds, setEnrolledCourseIds] = useState<string[]>([]);
 
   const fetchCourses = async () => {
     try {
-      const courses = await client.findMyCourses();
-      dispatch(setCourses(courses));
+      if (isFaculty) {
+        const myCourses = await client.findMyCourses();
+        dispatch(setCourses(myCourses));
+      } else {
+        const [allCourses, myCourses] = await Promise.all([
+          client.fetchAllCourses(),
+          client.findMyCourses(),
+        ]);
+        dispatch(setCourses(allCourses));
+        setEnrolledCourseIds(myCourses.map((c: any) => c._id));
+      }
     } catch (error) {
       console.error(error);
     }
@@ -57,32 +68,54 @@ export default function Dashboard() {
     );
   };
 
+  const onEnroll = async (courseId: string) => {
+    try {
+      await client.enrollInCourse(courseId);
+      setEnrolledCourseIds([...enrolledCourseIds, courseId]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onUnenroll = async (courseId: string) => {
+    try {
+      await client.unenrollFromCourse(courseId);
+      setEnrolledCourseIds(enrolledCourseIds.filter((id) => id !== courseId));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div id="wd-dashboard">
       <h1>Dashboard</h1>
       <hr />
-      <h5>
-        New Course
-        <Button className="float-end" id="wd-add-new-course-click" onClick={onAddNewCourse}>
-          Add
-        </Button>
-        <Button className="float-end me-2" variant="secondary" id="wd-update-course-click" onClick={onUpdateCourse}>
-          Update
-        </Button>
-      </h5>
-      <br />
-      <FormControl
-        value={course.name}
-        className="mb-2"
-        onChange={(e) => setCourse({ ...course, name: e.target.value })}
-      />
-      <FormControl
-        as="textarea"
-        value={course.description}
-        className="mb-2"
-        onChange={(e) => setCourse({ ...course, description: e.target.value })}
-      />
-      <hr />
+      {isFaculty && (
+        <>
+          <h5>
+            New Course
+            <Button className="float-end" id="wd-add-new-course-click" onClick={onAddNewCourse}>
+              Add
+            </Button>
+            <Button className="float-end me-2" variant="secondary" id="wd-update-course-click" onClick={onUpdateCourse}>
+              Update
+            </Button>
+          </h5>
+          <br />
+          <FormControl
+            value={course.name}
+            className="mb-2"
+            onChange={(e) => setCourse({ ...course, name: e.target.value })}
+          />
+          <FormControl
+            as="textarea"
+            value={course.description}
+            className="mb-2"
+            onChange={(e) => setCourse({ ...course, description: e.target.value })}
+          />
+          <hr />
+        </>
+      )}
       <h2>Published Courses ({courses.length})</h2>
       <hr />
       <Row xs={1} md={2} lg={3} xl={4} className="g-4">
@@ -97,26 +130,56 @@ export default function Dashboard() {
                     {c.description}
                   </Card.Text>
                   <Button variant="primary">Go</Button>
-                  <Button
-                    variant="danger"
-                    className="float-end"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      onDeleteCourse(c._id);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    variant="warning"
-                    className="float-end me-2"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      setCourse(c);
-                    }}
-                  >
-                    Edit
-                  </Button>
+                  {isFaculty ? (
+                    <>
+                      <Button
+                        variant="danger"
+                        className="float-end"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          onDeleteCourse(c._id);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                      <Button
+                        variant="warning"
+                        className="float-end me-2"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setCourse(c);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      {enrolledCourseIds.includes(c._id) ? (
+                        <Button
+                          variant="danger"
+                          className="float-end"
+                          onClick={(event) => {
+                            event.preventDefault();
+                            onUnenroll(c._id);
+                          }}
+                        >
+                          Unenroll
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="success"
+                          className="float-end"
+                          onClick={(event) => {
+                            event.preventDefault();
+                            onEnroll(c._id);
+                          }}
+                        >
+                          Enroll
+                        </Button>
+                      )}
+                    </>
+                  )}
                 </Card.Body>
               </Link>
             </Card>

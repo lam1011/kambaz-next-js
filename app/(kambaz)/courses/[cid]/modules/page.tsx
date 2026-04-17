@@ -4,13 +4,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "next/navigation";
 import { FormControl, ListGroup, ListGroupItem, Button } from "react-bootstrap";
 import { FaTrash, FaPencilAlt, FaPlus, FaCheckCircle } from "react-icons/fa";
-import { setModules, addModule, editModule, updateModule, deleteModule } from "./reducer";
+import { setModules, editModule, updateModule } from "./reducer";
 import * as client from "../../client";
 
 export default function Modules() {
   const { cid } = useParams();
   const [moduleName, setModuleName] = useState("");
   const { modules } = useSelector((state: any) => state.modulesReducer);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const isFaculty = currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
   const dispatch = useDispatch();
 
   const fetchModules = async () => {
@@ -31,40 +33,46 @@ export default function Modules() {
   };
 
   const onRemoveModule = async (moduleId: string) => {
-    await client.deleteModule(moduleId);
+    await client.deleteModule(cid as string, moduleId);
     dispatch(setModules(modules.filter((m: any) => m._id !== moduleId)));
   };
 
   const onUpdateModule = async (module: any) => {
-    await client.updateModule(module);
+    await client.updateModule(cid as string, module);
     const newModules = modules.map((m: any) => (m._id === module._id ? module : m));
     dispatch(setModules(newModules));
   };
 
   return (
     <div>
-      <div className="d-flex mb-3">
-        <FormControl
-          value={moduleName}
-          placeholder="New Module"
-          className="me-2"
-          onChange={(e) => setModuleName(e.target.value)}
-        />
-        <Button onClick={onCreateModuleForCourse} variant="success">
-          <FaPlus />
-        </Button>
-      </div>
+      {isFaculty && (
+        <div className="d-flex mb-3">
+          <FormControl
+            value={moduleName}
+            placeholder="New Module"
+            className="me-2"
+            onChange={(e) => setModuleName(e.target.value)}
+          />
+          <Button onClick={onCreateModuleForCourse} variant="success">
+            <FaPlus />
+          </Button>
+        </div>
+      )}
       <ListGroup id="wd-modules" className="rounded-0">
         {modules.map((module: any) => (
           <ListGroupItem key={module._id} className="d-flex align-items-center">
-            <FaTrash
-              className="text-danger me-2 cursor-pointer"
-              onClick={() => onRemoveModule(module._id)}
-            />
-            <FaPencilAlt
-              className="text-primary me-2 cursor-pointer"
-              onClick={() => dispatch(editModule(module._id))}
-            />
+            {isFaculty && (
+              <>
+                <FaTrash
+                  className="text-danger me-2 cursor-pointer"
+                  onClick={() => onRemoveModule(module._id)}
+                />
+                <FaPencilAlt
+                  className="text-primary me-2 cursor-pointer"
+                  onClick={() => dispatch(editModule(module._id))}
+                />
+              </>
+            )}
             {!module.editing ? (
               <span>{module.name}</span>
             ) : (

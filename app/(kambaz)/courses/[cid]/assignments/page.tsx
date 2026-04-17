@@ -1,8 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "next/navigation";
-import { FormControl, ListGroup, ListGroupItem, Button } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Button } from "react-bootstrap";
 import { FaTrash, FaPlus } from "react-icons/fa";
 import Link from "next/link";
 import { setAssignments } from "./reducer";
@@ -11,6 +11,8 @@ import * as client from "../../client";
 export default function Assignments() {
   const { cid } = useParams();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const isFaculty = currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
   const dispatch = useDispatch();
 
   const fetchAssignments = async () => {
@@ -43,9 +45,11 @@ export default function Assignments() {
     <div id="wd-assignments">
       <div className="d-flex mb-3">
         <h3 className="me-auto">Assignments</h3>
-        <Button onClick={onCreateAssignment} variant="success">
-          <FaPlus className="me-1" /> Assignment
-        </Button>
+        {isFaculty && (
+          <Button onClick={onCreateAssignment} variant="success">
+            <FaPlus className="me-1" /> Assignment
+          </Button>
+        )}
       </div>
       <ListGroup className="rounded-0">
         {assignments.map((assignment: any) => (
@@ -56,10 +60,12 @@ export default function Assignments() {
             >
               {assignment.title}
             </Link>
-            <FaTrash
-              className="text-danger cursor-pointer"
-              onClick={() => onDeleteAssignment(assignment._id)}
-            />
+            {isFaculty && (
+              <FaTrash
+                className="text-danger cursor-pointer"
+                onClick={() => onDeleteAssignment(assignment._id)}
+              />
+            )}
           </ListGroupItem>
         ))}
       </ListGroup>
