@@ -4,7 +4,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa";
 import { IoCloseSharp } from "react-icons/io5";
-import { FormControl } from "react-bootstrap";
+import { FormControl, FormSelect } from "react-bootstrap";
 import * as client from "../../../account/client";
 
 export default function PeopleDetails({
@@ -18,12 +18,17 @@ export default function PeopleDetails({
 }) {
   const [user, setUser] = useState<any>({});
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
   const [editing, setEditing] = useState(false);
 
   const fetchUser = async () => {
     if (!uid) return;
-    const user = await client.findUserById(uid);
-    setUser(user);
+    const u = await client.findUserById(uid);
+    setUser(u);
+    setName(`${u.firstName} ${u.lastName}`);
+    setEmail(u.email || "");
+    setRole(u.role || "");
   };
 
   useEffect(() => {
@@ -35,7 +40,7 @@ export default function PeopleDetails({
   const saveUser = async () => {
     const [firstName, ...rest] = name.split(" ");
     const lastName = rest.join(" ");
-    const updatedUser = { ...user, firstName, lastName };
+    const updatedUser = { ...user, firstName, lastName, email, role };
     await client.updateUser(updatedUser);
     setUser(updatedUser);
     setEditing(false);
@@ -75,18 +80,43 @@ export default function PeopleDetails({
             {user.firstName} {user.lastName}
           </div>
         )}
-        {user && editing && (
+        {editing && (
           <FormControl
             className="w-50 wd-edit-name"
-            defaultValue={`${user.firstName} ${user.lastName}`}
+            value={name}
             onChange={(e) => setName(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") saveUser();
-            }}
+            onKeyDown={(e) => { if (e.key === "Enter") saveUser(); }}
           />
         )}
       </div>
-      <b>Roles:</b> <span className="wd-roles">{user.role}</span> <br />
+      <br />
+      <b>Email:</b>{" "}
+      {!editing ? (
+        <span className="wd-email">{user.email}</span>
+      ) : (
+        <FormControl
+          className="wd-edit-email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      )}
+      <br />
+      <b>Role:</b>{" "}
+      {!editing ? (
+        <span className="wd-roles">{user.role}</span>
+      ) : (
+        <FormSelect
+          className="wd-edit-role"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+        >
+          <option value="STUDENT">Student</option>
+          <option value="FACULTY">Faculty</option>
+          <option value="ADMIN">Admin</option>
+          <option value="USER">User</option>
+        </FormSelect>
+      )}
+      <br />
       <b>Login ID:</b> <span className="wd-login-id">{user.loginId}</span> <br />
       <b>Section:</b> <span className="wd-section">{user.section}</span> <br />
       <b>Total Activity:</b>{" "}
