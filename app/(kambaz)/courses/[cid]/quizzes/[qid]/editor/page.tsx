@@ -207,7 +207,6 @@ export default function QuizEditor() {
               <Form.Group>
                 <Form.Label className="fw-bold">Points</Form.Label>
                 <Form.Control type="number" value={totalPoints} readOnly className="bg-light" />
-                <Form.Text className="text-muted">Auto-calculated from questions</Form.Text>
               </Form.Group>
             </Col>
             <Col md={4}>

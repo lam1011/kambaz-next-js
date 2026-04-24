@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
-import { Button, Form, ProgressBar, Alert } from "react-bootstrap";
-import { FaEdit, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { Button, Form, Alert } from "react-bootstrap";
+import { FaEdit } from "react-icons/fa";
 import Link from "next/link";
 import * as client from "../../../../client";
 
@@ -158,9 +158,7 @@ export default function QuizPreview() {
         <h4>{quiz.title}</h4>
         <Alert variant="warning">You have used all your attempts for this quiz.</Alert>
         {prevAttempt && (
-          <div>
-            <p>Your last score: <strong>{prevAttempt.score} / {quiz.points}</strong></p>
-          </div>
+          <p>Your last score: <strong>{prevAttempt.score} / {quiz.points}</strong></p>
         )}
         <Button variant="secondary" onClick={() => router.push(`/courses/${cid}/quizzes/${qid}`)}>Back to Quiz</Button>
       </div>
@@ -179,13 +177,7 @@ export default function QuizPreview() {
             </Link>
           )}
         </div>
-        {isFaculty && (
-          <Alert variant="info">Preview mode — answers not saved to database.</Alert>
-        )}
-        <Alert variant={score === totalPoints ? "success" : score >= totalPoints / 2 ? "warning" : "danger"}>
-          Score: <strong>{score} / {totalPoints}</strong>
-        </Alert>
-        <ProgressBar now={(score / (totalPoints || 1)) * 100} label={`${Math.round((score / (totalPoints || 1)) * 100)}%`} className="mb-4" />
+        <p className="fw-bold">Score: {score} / {totalPoints}</p>
 
         {questions.map((q, idx) => {
           const correct = isCorrect(q);
@@ -244,24 +236,20 @@ export default function QuizPreview() {
         )}
       </div>
 
-      {isFaculty && <Alert variant="info" className="py-2">Faculty Preview Mode</Alert>}
       {quiz.description && <p className="text-muted">{quiz.description}</p>}
 
       {oneAtATime && questions.length > 0 && (
-        <div className="mb-3">
-          <div className="d-flex flex-wrap gap-1 mb-2">
-            {questions.map((_, idx) => (
-              <Button
-                key={idx}
-                size="sm"
-                variant={idx === currentIdx ? "primary" : answers[questions[idx]._id] !== undefined ? "success" : "outline-secondary"}
-                onClick={() => setCurrentIdx(idx)}
-              >
-                {idx + 1}
-              </Button>
-            ))}
-          </div>
-          <ProgressBar now={((currentIdx + 1) / questions.length) * 100} label={`${currentIdx + 1} / ${questions.length}`} />
+        <div className="d-flex flex-wrap gap-1 mb-3">
+          {questions.map((_, idx) => (
+            <Button
+              key={idx}
+              size="sm"
+              variant={idx === currentIdx ? "primary" : answers[questions[idx]._id] !== undefined ? "success" : "outline-secondary"}
+              onClick={() => setCurrentIdx(idx)}
+            >
+              {idx + 1}
+            </Button>
+          ))}
         </div>
       )}
 
@@ -309,11 +297,11 @@ export default function QuizPreview() {
       {oneAtATime && (
         <div className="d-flex gap-2 mb-3">
           <Button variant="outline-secondary" disabled={currentIdx === 0} onClick={() => setCurrentIdx((i) => i - 1)}>
-            <FaChevronLeft className="me-1" /> Previous
+            Previous
           </Button>
           {currentIdx < questions.length - 1 ? (
             <Button variant="outline-primary" onClick={() => setCurrentIdx((i) => i + 1)}>
-              Next <FaChevronRight className="ms-1" />
+              Next
             </Button>
           ) : (
             <Button variant="success" onClick={onSubmit}>Submit Quiz</Button>
